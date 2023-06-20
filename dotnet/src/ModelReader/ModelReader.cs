@@ -4,7 +4,7 @@ using System.Collections.Generic;
 #if NET5_0_OR_GREATER
 using System.ComponentModel.DataAnnotations;
 #endif
-using System.Data.EntitySchema;
+using System.Data.ModelDescription;
 using System.Linq;
 using System.Reflection;
 
@@ -112,6 +112,5 @@ namespace ModelReader {
       return value.Substring(0, value.Length - 6);
     }
   }
-
 
 }

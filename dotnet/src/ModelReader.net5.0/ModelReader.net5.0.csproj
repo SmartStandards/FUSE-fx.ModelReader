@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>ModelReader</AssemblyName>
+    <AssemblyName>FUSE-fx.ModelReader</AssemblyName>
     <RootNamespace>System</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <PropertyGroup>
-    <PackageId>ModelReader</PackageId>
-    <Description>a 44-Bit Timestamp with some random salt</Description>
-    <Product>ModelReader</Product>
+    <PackageId>FUSE-fx.ModelReader</PackageId>
+    <Description>reads 'EntityAnnotations' into a 'ModelDescription' structure for FUSE (Framework for Unified Storage and Entity)</Description>
+    <Product>FUSE-fx.ModelReader</Product>
     <Company>(public domain)</Company>
     <Copyright>SmartStandards</Copyright>
     <Version>1.0.0</Version>
@@ -21,7 +21,7 @@
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>..\..\dist\bin-net5.0\ModelReader.xml</DocumentationFile>
+    <DocumentationFile>..\..\dist\bin-net5.0\FUSE-fx.ModelReader.xml</DocumentationFile>
     <OutputPath>..\..\dist\bin-net5.0\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NoWarn>1701;1702;1591</NoWarn>
@@ -30,7 +30,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\dist\bin-net5.0\</OutputPath>
-    <DocumentationFile>..\..\dist\bin-net5.0\ModelReader.xml</DocumentationFile>
+    <DocumentationFile>..\..\dist\bin-net5.0\FUSE-fx.ModelReader.xml</DocumentationFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NoWarn>1701;1702;1591</NoWarn>
     <DefineConstants>TRACE;NET5</DefineConstants>
@@ -39,7 +39,8 @@
   <Import Project="..\ModelReader\ModelReader.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="EntitySchema" Version="1.1.0.748" />
+    <PackageReference Include="FUSE-fx.EntityAnnotations" Version="3.0.0" />
+    <PackageReference Include="FUSE-fx.ModelDescription" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
   </ItemGroup>
 

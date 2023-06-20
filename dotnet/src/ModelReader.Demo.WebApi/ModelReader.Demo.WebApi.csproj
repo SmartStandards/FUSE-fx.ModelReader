@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FUSE-fx.EntityAnnotations" Version="3.0.0" />
+    <PackageReference Include="FUSE-fx.ModelDescription" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
