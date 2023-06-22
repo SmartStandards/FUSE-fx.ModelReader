@@ -1,0 +1,13 @@
+{
+  "currentVersion": "0.1.0",
+  "currentVersionWithSuffix": "0.1.0",
+  "releaseType": "official",
+  "previousVersion": "0.0.0",
+  "changeGrade": "patch",
+  "currentMajor": 0,
+  "currentMinor": 1,
+  "currentPatch": 0,
+  "versionDateInfo": "2023-06-21",
+  "versionTimeInfo": "09:27:04",
+  "versionNotes": "- initial commit\n- solution cleanup for build\n"
+}
