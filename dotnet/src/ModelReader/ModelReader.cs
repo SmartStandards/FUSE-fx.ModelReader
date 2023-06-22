@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-#if NET5_0_OR_GREATER
 using System.ComponentModel.DataAnnotations;
-#endif
 using System.Data.ModelDescription;
 using System.Linq;
 using System.Reflection;
@@ -35,7 +33,7 @@ namespace ModelReader {
         );
         if (isList) {
           AddListNavigation(propertyInfo, entitySchema, schemaRoot);
-        } else {
+        } else {         
           bool isForeignKey = propertyInfo.Name.Length > 2 &&
             propertyInfo.Name.Substring(propertyInfo.Name.Length - 2, 2) == "Id";
 
@@ -64,12 +62,8 @@ namespace ModelReader {
       FieldSchema fieldSchema = new FieldSchema();
       fieldSchema.Name = propertyInfo.Name;
       fieldSchema.Type = propertyInfo.PropertyType.Name;
-#if NET5_0_OR_GREATER
       bool required = propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
       fieldSchema.Required = required;
-#else
-      fieldSchema.Required = true; //TODO
-#endif
       entitySchema.Fields = entitySchema.Fields.Append(fieldSchema).ToArray();
     }
 
@@ -82,7 +76,8 @@ namespace ModelReader {
       relationSchema.PrimaryEntityName = entitySchema.Name;
       relationSchema.ForeignEntityName = navigationPropertyInfo.Name;
       relationSchema.ForeignKeyIndexName = foreignKeyPropertyInfo.Name;
-      //TODO PropertyRole?
+      LookupAttribute lookupAttribute = navigationPropertyInfo.GetCustomAttribute<LookupAttribute>();
+      relationSchema.IsLookupRelation = lookupAttribute != null;
 
       relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
       schemaRoot.Relations = schemaRoot.Relations.Append(relationSchema).ToArray();
@@ -97,7 +92,8 @@ namespace ModelReader {
       relationSchema.Name = navigationPropertyInfo.Name;
       relationSchema.PrimaryEntityName = entitySchema.Name;
       relationSchema.ForeignEntityName = foreignEntityType.Name.ToClearName();
-      //TODO PropertyRole?
+      LookupAttribute lookupAttribute = navigationPropertyInfo.GetCustomAttribute<LookupAttribute>();
+      relationSchema.IsLookupRelation = lookupAttribute != null;
       relationSchema.ForeignEntityIsMultiple = true;
       relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
       schemaRoot.Relations = schemaRoot.Relations.Append(relationSchema).ToArray();
