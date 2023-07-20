@@ -1,13 +1,13 @@
 {
-  "currentVersion": "0.1.0",
-  "currentVersionWithSuffix": "0.1.0",
+  "currentVersion": "0.1.1",
+  "currentVersionWithSuffix": "0.1.1",
   "releaseType": "official",
-  "previousVersion": "0.0.0",
+  "previousVersion": "0.1.0",
   "changeGrade": "patch",
   "currentMajor": 0,
   "currentMinor": 1,
-  "currentPatch": 0,
-  "versionDateInfo": "2023-06-21",
-  "versionTimeInfo": "09:27:04",
-  "versionNotes": "- initial commit\n- solution cleanup for build\n"
+  "currentPatch": 1,
+  "versionDateInfo": "2023-07-20",
+  "versionTimeInfo": "19:24:28",
+  "versionNotes": "- ModelReader\n"
 }
