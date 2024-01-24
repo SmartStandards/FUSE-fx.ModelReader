@@ -33,7 +33,7 @@ namespace ModelReader {
         );
         if (isList) {
           AddListNavigation(propertyInfo, entitySchema, schemaRoot);
-        } else {         
+        } else {
           bool isForeignKey = propertyInfo.Name.Length > 2 &&
             propertyInfo.Name.Substring(propertyInfo.Name.Length - 2, 2) == "Id";
 
@@ -96,6 +96,7 @@ namespace ModelReader {
       relationSchema.IsLookupRelation = lookupAttribute != null;
       relationSchema.ForeignEntityIsMultiple = true;
       relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
+      relationSchema.PrimaryNavigationName = navigationPropertyInfo.Name;
       schemaRoot.Relations = schemaRoot.Relations.Append(relationSchema).ToArray();
     }
   }
