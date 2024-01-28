@@ -74,7 +74,7 @@ namespace ModelReader {
       RelationSchema relationSchema = new RelationSchema();
       relationSchema.Name = navigationPropertyInfo.Name;
       relationSchema.PrimaryEntityName = entitySchema.Name;
-      relationSchema.ForeignEntityName = navigationPropertyInfo.Name;
+      relationSchema.ForeignEntityName = navigationPropertyInfo.PropertyType.Name;
       relationSchema.ForeignKeyIndexName = foreignKeyPropertyInfo.Name;
       LookupAttribute lookupAttribute = navigationPropertyInfo.GetCustomAttribute<LookupAttribute>();
       relationSchema.IsLookupRelation = lookupAttribute != null;
