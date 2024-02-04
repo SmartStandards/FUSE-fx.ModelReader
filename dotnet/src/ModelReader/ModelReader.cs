@@ -24,6 +24,9 @@ namespace ModelReader {
       entitySchema.Name = type.Name.ToClearName();
       entitySchema.NamePlural = type.Name.ToClearName() + " Plural";
       List<string> processedPropertyNames = new List<string>();
+
+      AddIndices(entitySchema, type);
+
       foreach (PropertyInfo propertyInfo in type.GetProperties()) {
         if (propertyInfo.Name == "RowVersion") { continue; }
         if (processedPropertyNames.Contains(propertyInfo.Name)) { continue; }
@@ -56,6 +59,37 @@ namespace ModelReader {
         }
       }
       schemaRoot.Entities = schemaRoot.Entities.Append(entitySchema).ToArray();
+    }
+
+    private static void AddIndices(EntitySchema entitySchema, Type type) {
+      IEnumerable<PropertyGroupAttribute> propertyGroups = type.GetCustomAttributes<PropertyGroupAttribute>();
+      IEnumerable<UniquePropertyGroupAttribute> uniquePropertyGroups = type.GetCustomAttributes<UniquePropertyGroupAttribute>();
+      PrimaryIdentityAttribute primaryIdentity = type.GetCustomAttribute<PrimaryIdentityAttribute>();
+      List<IndexSchema> indexes = new List<IndexSchema>();
+      foreach (PropertyGroupAttribute propertyGroup in propertyGroups) {
+        if (entitySchema.Indices.Any((i) => i.Name == propertyGroup.GroupName)) continue;
+        indexes.Add(
+          new IndexSchema() {
+            Name = propertyGroup.GroupName,
+            MemberFieldNames = propertyGroup.PropertyNames,
+            Unique = false
+          }
+        );
+      }
+      foreach (UniquePropertyGroupAttribute propertyGroup in uniquePropertyGroups) {
+        if (entitySchema.Indices.Any((i) => i.Name == propertyGroup.GroupName)) continue;
+        indexes.Add(
+          new IndexSchema() {
+            Name = propertyGroup.GroupName,
+            MemberFieldNames = propertyGroup.PropertyNames,
+            Unique = true
+          }
+        );
+      }
+      entitySchema.Indices = indexes.ToArray();
+      if (primaryIdentity != null) {
+        entitySchema.PrimaryKeyIndexName = primaryIdentity.PropertyGroupName;
+      }
     }
 
     private static void AddField(PropertyInfo propertyInfo, EntitySchema entitySchema) {
