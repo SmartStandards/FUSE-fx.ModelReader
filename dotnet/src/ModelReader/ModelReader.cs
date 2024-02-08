@@ -58,7 +58,7 @@ namespace System.Data.Fuse {
           }
         }
       }
-      schemaRoot.Entities = schemaRoot.Entities.Append(entitySchema).ToArray();
+      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
     }
 
     private static void AddIndices(EntitySchema entitySchema, Type type) {
@@ -98,7 +98,8 @@ namespace System.Data.Fuse {
       fieldSchema.Type = propertyInfo.PropertyType.Name;
       bool required = propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
       fieldSchema.Required = required;
-      entitySchema.Fields = entitySchema.Fields.Append(fieldSchema).ToArray();
+      entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
+
     }
 
     private static void AddNavigation(
@@ -114,7 +115,8 @@ namespace System.Data.Fuse {
       relationSchema.IsLookupRelation = lookupAttribute != null;
 
       relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
-      schemaRoot.Relations = schemaRoot.Relations.Append(relationSchema).ToArray();
+      schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
+
     }
 
     private static void AddListNavigation(
@@ -131,7 +133,7 @@ namespace System.Data.Fuse {
       relationSchema.ForeignEntityIsMultiple = true;
       relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
       relationSchema.PrimaryNavigationName = navigationPropertyInfo.Name;
-      schemaRoot.Relations = schemaRoot.Relations.Append(relationSchema).ToArray();
+      schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
     }
   }
 
