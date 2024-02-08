@@ -6,7 +6,7 @@ using System.Data.ModelDescription;
 using System.Linq;
 using System.Reflection;
 
-namespace ModelReader {
+namespace System.Data.Fuse {
 
   public partial class ModelReader {
 
