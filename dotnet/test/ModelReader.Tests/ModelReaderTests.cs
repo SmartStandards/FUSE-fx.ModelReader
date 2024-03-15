@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.ModelDescription;
+using System.Linq;
 
 namespace System.Data.Fuse.Tests {
   [TestClass]
