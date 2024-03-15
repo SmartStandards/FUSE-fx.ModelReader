@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelReader.net461", "src\M
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModelReader", "src\ModelReader\ModelReader.shproj", "{28317DAC-C69F-462C-8F8A-E931D46E3B29}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9255430E-3051-4E63-9F04-E22CD66432D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelReader.Tests", "test\ModelReader.Tests\ModelReader.Tests.csproj", "{1D3F316B-E2DA-463B-9C02-B55CDE446CE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,10 @@ Global
 		{B0BA06FE-6437-4B9E-8C76-3ADFC8D191D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0BA06FE-6437-4B9E-8C76-3ADFC8D191D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0BA06FE-6437-4B9E-8C76-3ADFC8D191D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D3F316B-E2DA-463B-9C02-B55CDE446CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D3F316B-E2DA-463B-9C02-B55CDE446CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D3F316B-E2DA-463B-9C02-B55CDE446CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D3F316B-E2DA-463B-9C02-B55CDE446CE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +55,7 @@ Global
 		{7B5BAEA8-7E79-4A30-B6C1-4DA4831AF970} = {EFB5135D-039A-4D92-8FDD-9EA5D070F991}
 		{B0BA06FE-6437-4B9E-8C76-3ADFC8D191D2} = {EFB5135D-039A-4D92-8FDD-9EA5D070F991}
 		{28317DAC-C69F-462C-8F8A-E931D46E3B29} = {EFB5135D-039A-4D92-8FDD-9EA5D070F991}
+		{1D3F316B-E2DA-463B-9C02-B55CDE446CE0} = {9255430E-3051-4E63-9F04-E22CD66432D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D2F37C1D-32F0-4BF2-AAEB-46B9D8C07D23}
