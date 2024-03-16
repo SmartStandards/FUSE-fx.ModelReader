@@ -45,52 +45,83 @@ namespace System.Data.Fuse {
         AddField(propertyInfo, entitySchema);
 
         foreach (HasPrincipalAttribute principalAttribute in type.GetCustomAttributes<HasPrincipalAttribute>()) {
-          RelationSchema relationSchema = new RelationSchema();
-          PropertyInfo localNavigationProperty = type.GetProperty(principalAttribute.LocalNavigationName);
-          if (localNavigationProperty == null) { continue; }
-          relationSchema.PrimaryEntityName = localNavigationProperty.PropertyType.Name;
-          relationSchema.PrimaryNavigationName = principalAttribute.NavigationNameOnPrincipal;
-          relationSchema.ForeignEntityName = type.Name;
-          relationSchema.ForeignNavigationName = principalAttribute.LocalNavigationName;
-          relationSchema.ForeignKeyIndexName = principalAttribute.LocalFkPropertyGroupName;
-
-          PropertyInfo navigationPropOnPrincipal = localNavigationProperty.PropertyType.GetProperty(
-            principalAttribute.NavigationNameOnPrincipal
-          );
-          if (navigationPropOnPrincipal != null) {
-            relationSchema.ForeignEntityIsMultiple = typeof(IEnumerable).IsAssignableFrom(
-              navigationPropOnPrincipal.PropertyType
-            );
-          }
-
-          if (ContainsRelation(schemaRoot, relationSchema)) { continue; }
-          schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
+          AddPrincipalRelation(schemaRoot, type, principalAttribute);
         }
 
         foreach (HasDependentAttribute dependentAttribute in type.GetCustomAttributes<HasDependentAttribute>()) {
-          RelationSchema relationSchema = new RelationSchema();
-          relationSchema.PrimaryEntityName = type.Name;
-          relationSchema.PrimaryNavigationName = dependentAttribute.LocalNavigationName;
-
-          PropertyInfo localNavigationProp = type.GetProperty(dependentAttribute.LocalNavigationName);
-          if (localNavigationProp == null) { continue; }
-          bool isMultiple = typeof(IEnumerable).IsAssignableFrom(localNavigationProp.PropertyType);
-          if (isMultiple) {
-            relationSchema.ForeignEntityIsMultiple = true;
-            Type elementType = localNavigationProp.PropertyType.GetGenericArguments()[0];
-            relationSchema.ForeignEntityName = elementType.Name;
-          } else {
-            relationSchema.ForeignEntityName = localNavigationProp.PropertyType.Name;
-          }
-          relationSchema.ForeignNavigationName = dependentAttribute.NavigationNameOnDependent;
-          relationSchema.ForeignKeyIndexName = dependentAttribute.FkPropertyGroupNameOnDependent;                   
-
-          if (ContainsRelation(schemaRoot, relationSchema)) { continue; }
-          schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
+          AddDependentRelation(schemaRoot, type, dependentAttribute);
         }
 
       }
       schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
+    }
+
+    private static void AddDependentRelation(SchemaRoot schemaRoot, Type type, HasDependentAttribute dependentAttribute) {
+      RelationSchema relationSchema = new RelationSchema();
+      relationSchema.PrimaryEntityName = type.Name;
+      relationSchema.PrimaryNavigationName = dependentAttribute.LocalNavigationName;
+      relationSchema.ForeignNavigationName = dependentAttribute.NavigationNameOnDependent;
+      relationSchema.ForeignKeyIndexName = dependentAttribute.FkPropertyGroupNameOnDependent;
+
+
+      relationSchema.ForeignEntityIsMultiple = true;
+      if (string.IsNullOrEmpty(dependentAttribute.DependentTypeName)) {
+        if (!string.IsNullOrEmpty(dependentAttribute.LocalNavigationName)) {
+          PropertyInfo localNavigationProp = type.GetProperty(dependentAttribute.LocalNavigationName);
+          if (localNavigationProp != null) {
+            bool isMultiple = typeof(IEnumerable).IsAssignableFrom(localNavigationProp.PropertyType);
+            if (isMultiple) {
+              relationSchema.ForeignEntityName = localNavigationProp.PropertyType.GetGenericArguments()[0].Name;
+
+            } else {
+              relationSchema.ForeignEntityName = localNavigationProp.PropertyType.Name;
+
+              relationSchema.ForeignEntityIsMultiple = false;              
+            }
+          }
+        }
+      } else {
+        relationSchema.ForeignEntityName = dependentAttribute.DependentTypeName;
+
+      }
+
+      if (ContainsRelation(schemaRoot, relationSchema)) { return; }
+      schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
+    }
+
+    private static void AddPrincipalRelation(SchemaRoot schemaRoot, Type type, HasPrincipalAttribute principalAttribute) {
+      RelationSchema relationSchema = new RelationSchema();
+      Type principalType = null;
+      if (string.IsNullOrEmpty(principalAttribute.PrincipalTypeName)) {
+        PropertyInfo localNavigationProperty = type.GetProperty(principalAttribute.LocalNavigationName);
+        if (localNavigationProperty != null) {
+          relationSchema.PrimaryEntityName = localNavigationProperty.PropertyType.Name;
+          principalType = localNavigationProperty.PropertyType;
+        }
+      } else {
+        principalType = type.Assembly.GetType(principalAttribute.PrincipalTypeName);
+        relationSchema.PrimaryEntityName = principalAttribute.PrincipalTypeName;
+      }
+
+      relationSchema.PrimaryNavigationName = principalAttribute.NavigationNameOnPrincipal;
+      relationSchema.ForeignEntityName = type.Name;
+      relationSchema.ForeignNavigationName = principalAttribute.LocalNavigationName;
+      relationSchema.ForeignKeyIndexName = principalAttribute.LocalFkPropertyGroupName;
+
+      relationSchema.ForeignEntityIsMultiple = true;
+      if (!string.IsNullOrEmpty(principalAttribute.NavigationNameOnPrincipal) && principalType != null) {
+        PropertyInfo navigationPropOnPrincipal = principalType.GetProperty(
+           principalAttribute.NavigationNameOnPrincipal
+         );
+        if (navigationPropOnPrincipal != null) {
+          relationSchema.ForeignEntityIsMultiple = typeof(IEnumerable).IsAssignableFrom(
+            navigationPropOnPrincipal.PropertyType
+          );
+        }
+      }
+
+      if (ContainsRelation(schemaRoot, relationSchema)) { return; }
+      schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
     }
 
     private static bool ContainsRelation(SchemaRoot schemaRoot, RelationSchema relationSchema) {
@@ -144,39 +175,6 @@ namespace System.Data.Fuse {
 
     }
 
-    private static void AddNavigation(
-      PropertyInfo foreignKeyPropertyInfo, PropertyInfo navigationPropertyInfo,
-      EntitySchema entitySchema, SchemaRoot schemaRoot
-    ) {
-      RelationSchema relationSchema = new RelationSchema();
-      relationSchema.Name = navigationPropertyInfo.Name;
-      relationSchema.PrimaryEntityName = entitySchema.Name;
-      relationSchema.ForeignEntityName = navigationPropertyInfo.PropertyType.Name;
-      relationSchema.ForeignKeyIndexName = foreignKeyPropertyInfo.Name;
-      LookupAttribute lookupAttribute = navigationPropertyInfo.GetCustomAttribute<LookupAttribute>();
-      relationSchema.IsLookupRelation = lookupAttribute != null;
-
-      relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
-      schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
-
-    }
-
-    private static void AddListNavigation(
-      PropertyInfo navigationPropertyInfo, EntitySchema entitySchema, SchemaRoot schemaRoot
-    ) {
-      Type foreignEntityType = navigationPropertyInfo.PropertyType.GetGenericArguments()[0];
-
-      RelationSchema relationSchema = new RelationSchema();
-      relationSchema.Name = navigationPropertyInfo.Name;
-      relationSchema.PrimaryEntityName = entitySchema.Name;
-      relationSchema.ForeignEntityName = foreignEntityType.Name.ToClearName();
-      LookupAttribute lookupAttribute = navigationPropertyInfo.GetCustomAttribute<LookupAttribute>();
-      relationSchema.IsLookupRelation = lookupAttribute != null;
-      relationSchema.ForeignEntityIsMultiple = true;
-      relationSchema.ForeignNavigationName = navigationPropertyInfo.Name;
-      relationSchema.PrimaryNavigationName = navigationPropertyInfo.Name;
-      schemaRoot.Relations = schemaRoot.Relations.Union(new List<RelationSchema> { relationSchema }).ToArray();
-    }
   }
 
   internal static class StringExtensions {

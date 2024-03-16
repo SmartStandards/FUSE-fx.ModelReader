@@ -10,6 +10,7 @@ namespace System.Data.Fuse.Tests {
   public class ModelReaderTests {
 
     [HasDependent(nameof(Person.Addresses), nameof(Address.Personalnummer), nameof(Address.Person))]
+    [HasDependent("", nameof(WorkingAddress.PersonId), "", null, nameof(WorkingAddress))]
     public class Person {
 
       public int Nummer { get; set; }
@@ -19,6 +20,17 @@ namespace System.Data.Fuse.Tests {
       public virtual ICollection<Address> Addresses { get; set; } = new ObservableCollection<Address>();
 
       public virtual AdditionalPersonData AdditionalPersonData { get; set; } = null!;
+    }
+
+    [HasPrincipal("", nameof(ContactData.Personnumber), "", null, nameof(Person))]
+    public class ContactData {
+      public int Personnumber { get; set; }
+      public string Content { get; set; } = string.Empty;
+    }
+
+    public class WorkingAddress {
+      public int PersonId { get; set; }
+      public string Content { get; set; } = string.Empty;
     }
 
     [HasPrincipal(nameof(Address.Person), nameof(Address.Personalnummer), nameof(System.Data.Fuse.Tests.ModelReaderTests.Person.Addresses))]
@@ -44,11 +56,11 @@ namespace System.Data.Fuse.Tests {
     public void ModelReader_GetSchema_ReturnsRelationsCorrectly() {
 
       SchemaRoot schemaRoot = ModelReader.GetSchema(
-        typeof(Person).Assembly, 
-        new string[] { nameof(Person), nameof(Address), nameof(AdditionalPersonData) }
+        typeof(Person).Assembly,
+        new string[] { nameof(Person), nameof(Address), nameof(AdditionalPersonData), nameof(ContactData), nameof(WorkingAddress) }
       );
       Assert.IsNotNull(schemaRoot);
-      Assert.AreEqual(2, schemaRoot.Relations.Count());
+      Assert.AreEqual(4, schemaRoot.Relations.Count());
     }
   }
 }
