@@ -20,4 +20,13 @@
     <ProjectReference Include="..\..\src\ModelReader.net6.0\ModelReader.net6.0.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="FUSE-fx.EntityAnnotations">
+      <HintPath>..\..\..\..\FUSE-fx.EntityAnnotations\dotnet\dist\bin-net6.0\FUSE-fx.EntityAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="FUSE-fx.ModelDescription">
+      <HintPath>..\..\..\..\FUSE-fx.ModelDescription\dotnet\dist\bin-net6.0\FUSE-fx.ModelDescription.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
