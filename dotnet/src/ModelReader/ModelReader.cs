@@ -186,7 +186,7 @@ namespace System.Data.Fuse {
       relationSchema.PrimaryNavigationName = dependentAttribute.LocalNavigationName;
       relationSchema.ForeignNavigationName = dependentAttribute.NavigationNameOnDependent;
       relationSchema.ForeignKeyIndexName = dependentAttribute.FkPropertyGroupNameOnDependent;
-
+      relationSchema.IsLookupRelation = false;
 
       relationSchema.ForeignEntityIsMultiple = true;
       if (string.IsNullOrEmpty(dependentAttribute.DependentTypeName)) {
@@ -231,6 +231,7 @@ namespace System.Data.Fuse {
       relationSchema.ForeignEntityName = type.Name;
       relationSchema.ForeignNavigationName = principalAttribute.LocalNavigationName;
       relationSchema.ForeignKeyIndexName = principalAttribute.LocalFkPropertyGroupName;
+      relationSchema.IsLookupRelation = false;
 
       relationSchema.ForeignEntityIsMultiple = true;
       if (!string.IsNullOrEmpty(principalAttribute.NavigationNameOnPrincipal) && principalType != null) {
