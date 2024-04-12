@@ -32,8 +32,8 @@ namespace System.Data.Fuse {
 
     private static void AddModelType(SchemaRoot schemaRoot, Type type) {
       EntitySchema entitySchema = new EntitySchema();
-      entitySchema.Name = type.Name.ToClearName();
-      entitySchema.NamePlural = type.Name.ToClearName() + " Plural";
+      entitySchema.Name = type.Name;
+      entitySchema.NamePlural = type.Name + " Plural";
       List<string> processedPropertyNames = new List<string>();
 
       AddIndices(entitySchema, type);
@@ -330,15 +330,6 @@ namespace System.Data.Fuse {
 
     }
 
-  }
-
-  internal static class StringExtensions {
-    public static string ToClearName(this string value) {
-      if (!value.EndsWith("Entity")) {
-        return value;
-      }
-      return value.Substring(0, value.Length - 6);
-    }
-  }
+  }  
 
 }
