@@ -65,17 +65,20 @@
 
 //      SchemaRoot schemaRoot = ModelReader.GetSchema(
 //        typeof(Person).Assembly,
-//        new string[] { 
-//          nameof(Person), 
-//          nameof(Address), 
-//          nameof(AdditionalPersonData), 
-//          nameof(ContactData), 
-//          nameof(WorkingAddress) 
+//        new string[] {
+//          nameof(Person),
+//          nameof(Address),
+//          nameof(AdditionalPersonData),
+//          nameof(ContactData),
+//          nameof(WorkingAddress)
 //        }
 //      );
 //      Assert.IsNotNull(schemaRoot);
-//      Assert.AreEqual(5, schemaRoot.Relations.Count());
+//      Assert.AreEqual(5, schemaRoot.Relations.Count());      
 //      RelationSchema childrenRelation = schemaRoot.Relations.First(r => r.PrimaryNavigationName == nameof(Person.Children));
+//      EntitySchema personSchema = schemaRoot.Entities.First(e => e.Name == nameof(Person));
+//      Assert.IsNotNull(personSchema);
+//      Assert.IsNull(personSchema.Fields.FirstOrDefault((f) => f.Name == nameof(Person.Addresses)));
 //      Assert.IsNotNull(childrenRelation);
 //    }
 //  }

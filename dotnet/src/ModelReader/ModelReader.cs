@@ -38,18 +38,6 @@ namespace System.Data.Fuse {
 
       AddIndices(entitySchema, type);
 
-      Dictionary<PropertyInfo, Type> navigations = ModelRelationExtensions.GetNavigations(type, true, true, true, true);
-      foreach (PropertyInfo propertyInfo in type.GetProperties()) {
-        if (propertyInfo.Name == "RowVersion") { continue; }
-        if (processedPropertyNames.Contains(propertyInfo.Name)) { continue; }
-        if (navigations.Any((kvp) => kvp.Key.Name == propertyInfo.Name)) {
-          ResolveNavigationProperty(schemaRoot, propertyInfo);
-          continue;
-        }
-
-        AddField(propertyInfo, entitySchema);
-      }
-
       foreach (HasPrincipalAttribute principalAttribute in type.GetCustomAttributes<HasPrincipalAttribute>()) {
         AddPrincipalRelation(schemaRoot, type, principalAttribute);
       }
@@ -60,6 +48,24 @@ namespace System.Data.Fuse {
 
       foreach (HasLookupAttribute lookupAttribute in type.GetCustomAttributes<HasLookupAttribute>()) {
         AddLookupRelation(schemaRoot, type, lookupAttribute);
+      }
+
+      Dictionary<PropertyInfo, Type> navigations = ModelRelationExtensions.GetNavigations(type, true, true, true, true);
+      foreach (PropertyInfo propertyInfo in type.GetProperties()) {
+        if (propertyInfo.Name == "RowVersion") { continue; }
+        if (processedPropertyNames.Contains(propertyInfo.Name)) { continue; }
+        if (
+          schemaRoot.Relations.Any(
+            (r) => (r.ForeignNavigationName == propertyInfo.Name && r.ForeignEntityName == entitySchema.Name) ||
+             (r.PrimaryNavigationName == propertyInfo.Name && r.PrimaryEntityName == entitySchema.Name)
+          )
+        ) { continue; }
+        if (navigations.Any((kvp) => kvp.Key.Name == propertyInfo.Name)) {
+          ResolveNavigationProperty(schemaRoot, propertyInfo);
+          continue;
+        }
+
+        AddField(propertyInfo, entitySchema);
       }
 
       schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
@@ -331,6 +337,6 @@ namespace System.Data.Fuse {
 
     }
 
-  }  
+  }
 
 }
