@@ -333,6 +333,12 @@ namespace System.Data.Fuse {
       fieldSchema.Type = propertyInfo.PropertyType.Name;
       bool required = propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
       fieldSchema.Required = required;
+
+      Attribute setableAttribute = propertyInfo.GetCustomAttribute<SetableAttribute>();
+      if (setableAttribute != null) {
+        fieldSchema.SetabilityFlags = (int)((SetableAttribute)setableAttribute).Setability;
+      }
+
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
 
     }
