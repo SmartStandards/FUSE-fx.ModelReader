@@ -1,13 +1,13 @@
 {
-  "currentVersion": "0.1.17",
-  "currentVersionWithSuffix": "0.1.17",
+  "currentVersion": "0.2.0",
+  "currentVersionWithSuffix": "0.2.0",
   "releaseType": "official",
-  "previousVersion": "0.1.16",
-  "changeGrade": "patch",
+  "previousVersion": "0.1.17",
+  "changeGrade": "minor",
   "currentMajor": 0,
-  "currentMinor": 1,
-  "currentPatch": 17,
-  "versionDateInfo": "2024-09-28",
-  "versionTimeInfo": "12:23:16",
-  "versionNotes": "- new revision without significant changes\n"
+  "currentMinor": 2,
+  "currentPatch": 0,
+  "versionDateInfo": "2024-10-02",
+  "versionTimeInfo": "13:59:47",
+  "versionNotes": "- new Feature: added Function to read entities from a given DBContext\n"
 }
