@@ -9,12 +9,7 @@
     <Import_RootNamespace>ModelReader</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)EntityRef.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Persistence\GenericEntityRepositoryEf.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Persistence\IGenericEntityRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InspectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModelReader.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Persistence\" />
   </ItemGroup>
 </Project>
