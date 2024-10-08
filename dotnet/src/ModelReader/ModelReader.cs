@@ -330,7 +330,11 @@ namespace System.Data.Fuse {
     private static void AddField(PropertyInfo propertyInfo, EntitySchema entitySchema) {
       FieldSchema fieldSchema = new FieldSchema();
       fieldSchema.Name = propertyInfo.Name;
-      fieldSchema.Type = propertyInfo.PropertyType.Name;
+      Type propertyType = propertyInfo.PropertyType;
+      if (Nullable.GetUnderlyingType(propertyType) != null) {
+        propertyType = propertyType.GetGenericArguments()[0];
+      }
+      fieldSchema.Type = propertyType.Name;
       bool required = propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
       fieldSchema.Required = required;
 
