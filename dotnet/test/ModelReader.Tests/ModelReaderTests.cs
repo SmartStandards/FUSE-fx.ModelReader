@@ -19,6 +19,8 @@
 
 //      public int ParentId { get; set; }
 
+//      public Nullable<DateTime> SomeNullableDate { get; set; }
+
 //      public virtual ICollection<Address> Addresses { get; set; } = new ObservableCollection<Address>();
 
 //      public virtual AdditionalPersonData AdditionalPersonData { get; set; } = null!;
@@ -74,7 +76,7 @@
 //        }
 //      );
 //      Assert.IsNotNull(schemaRoot);
-//      Assert.AreEqual(5, schemaRoot.Relations.Count());      
+//      Assert.AreEqual(5, schemaRoot.Relations.Count());
 //      RelationSchema childrenRelation = schemaRoot.Relations.First(r => r.PrimaryNavigationName == nameof(Person.Children));
 //      EntitySchema personSchema = schemaRoot.Entities.First(e => e.Name == nameof(Person));
 //      Assert.IsNotNull(personSchema);
