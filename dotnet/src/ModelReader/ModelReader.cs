@@ -10,31 +10,58 @@ namespace System.Data.Fuse {
 
   public partial class ModelReader {
 
+    [Obsolete("Please use the overload with Type[] as arg or 'GetSchemaForDbContext'")]
     public static SchemaRoot GetSchema(Assembly assembly, string modelNamespace) {
       SchemaRoot schemaRoot = new SchemaRoot();
       IEnumerable<Type> types = assembly.GetTypes().Where((Type t) => t.Namespace == modelNamespace);
       foreach (Type type in types) {
-        AddModelType(schemaRoot, type);
+        AddModelType(schemaRoot, type, false);
       }
       return schemaRoot;
     }
 
+    [Obsolete("Please use the overload with Type[] as arg or 'GetSchemaForDbContext'")]
     public static SchemaRoot GetSchema(Assembly assembly, string[] modelTypenames) {
       SchemaRoot schemaRoot = new SchemaRoot();
       IEnumerable<Type> types = assembly.GetTypes().Where(
         (Type t) => modelTypenames.Contains(t.Name) || modelTypenames.Contains(t.FullName)
       );
       foreach (Type type in types) {
-        AddModelType(schemaRoot, type);
+        AddModelType(schemaRoot, type, false);
       }
       return schemaRoot;
     }
 
-    private static void AddModelType(SchemaRoot schemaRoot, Type type) {
+    public static SchemaRoot GetSchemaForDbContext<TDbContext>() {
+      return GetSchemaForDbContext(typeof(TDbContext));
+    }
+
+    public static SchemaRoot GetSchemaForDbContext(Type dbContextType) {
+      var props = dbContextType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+      var dbSetProps = props.Where((p) => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition().Name.StartsWith("DbSet"));
+      Type[] principalEntityTypes = dbSetProps.Select((p) => p.PropertyType.GetGenericArguments()[0]).ToArray();
+      return GetSchema(principalEntityTypes, true);
+    }
+
+    public static SchemaRoot GetSchema(Type[] modelTypes, bool recurseNavigationProps) {
+      SchemaRoot schemaRoot = new SchemaRoot();
+      foreach (Type type in modelTypes) {
+        AddModelType(schemaRoot, type, recurseNavigationProps);
+      }
+      return schemaRoot;
+    }
+
+    private static void AddModelType(SchemaRoot schemaRoot, Type type, bool recurseNavigationProps) {
+
+      if(schemaRoot.Entities.Where((e) => e.Name == type.Name).Any()) {
+        return; //loop protection
+      }
+
       EntitySchema entitySchema = new EntitySchema();
       entitySchema.Name = type.Name;
       entitySchema.NamePlural = type.Name + " Plural";
       List<string> processedPropertyNames = new List<string>();
+      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
 
       AddIndices(entitySchema, type);
 
@@ -52,38 +79,60 @@ namespace System.Data.Fuse {
 
       Dictionary<PropertyInfo, Type> navigations = ModelRelationExtensions.GetNavigations(type, true, true, true, true);
       foreach (PropertyInfo propertyInfo in type.GetProperties()) {
-        if (propertyInfo.Name == "RowVersion") { continue; }
-        if (processedPropertyNames.Contains(propertyInfo.Name)) { continue; }
+
+        if (propertyInfo.Name == "RowVersion") { 
+          continue;
+        }
+
+        if (processedPropertyNames.Contains(propertyInfo.Name)) {
+          continue; 
+        }
+
         if (
           schemaRoot.Relations.Any(
             (r) => (r.ForeignNavigationName == propertyInfo.Name && r.ForeignEntityName == entitySchema.Name) ||
              (r.PrimaryNavigationName == propertyInfo.Name && r.PrimaryEntityName == entitySchema.Name)
           )
-        ) { continue; }
+        ) {
+          continue;
+        }
+
         if (navigations.Any((kvp) => kvp.Key.Name == propertyInfo.Name)) {
-          ResolveNavigationProperty(schemaRoot, propertyInfo);
+          Type navigationTarget = ResolveNavigationProperty(schemaRoot, propertyInfo);
+          if (navigationTarget != null && recurseNavigationProps) {
+            AddModelType(schemaRoot, navigationTarget, recurseNavigationProps);
+          }
           continue;
         }
 
         AddField(propertyInfo, entitySchema);
       }
 
-      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
     }
 
-    private static void ResolveNavigationProperty(SchemaRoot schemaRoot, PropertyInfo propertyInfo) {
+    private static Type ResolveNavigationProperty(SchemaRoot schemaRoot, PropertyInfo propertyInfo) {
+      bool isNavProp = false;
+      Type navigationTarget = null;
       foreach (PrincipalAttribute attr in propertyInfo.GetCustomAttributes<PrincipalAttribute>()) {
         AddPrincipalRelationByNavigationProperty(schemaRoot, propertyInfo, attr);
+        isNavProp = true;
       }
       foreach (LookupAttribute attr in propertyInfo.GetCustomAttributes<LookupAttribute>()) {
         AddLookupRelationByNavigationProperty(schemaRoot, propertyInfo, attr);
+        isNavProp = true;
       }
       foreach (DependentAttribute attr in propertyInfo.GetCustomAttributes<DependentAttribute>()) {
         AddDependentRelationByNavigationProperty(schemaRoot, propertyInfo, attr);
+        isNavProp = true;
       }
       foreach (ReferrerAttribute attr in propertyInfo.GetCustomAttributes<ReferrerAttribute>()) {
         AddReferrerRelationByNavigationProperty(schemaRoot, propertyInfo, attr);
+        isNavProp = true;
       }
+      if (isNavProp) {
+        navigationTarget = propertyInfo.PropertyType.GetUnwrappedType();
+      }
+      return navigationTarget;
     }
 
     private static void AddPrincipalRelationByNavigationProperty(

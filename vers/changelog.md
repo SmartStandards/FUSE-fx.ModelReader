@@ -12,6 +12,18 @@ This files contains a version history including all changes relevant for semanti
 
 
 
+## v 0.2.0
+released **2024-10-02**, including:
+ - **new Feature**: added Function to read entities from a given DBContext
+
+
+
+## v 0.1.17
+released **2024-09-28**, including:
+ - new revision without significant changes
+
+
+
 ## v 0.1.16
 released **2024-09-27**, including:
  - new revision without significant changes

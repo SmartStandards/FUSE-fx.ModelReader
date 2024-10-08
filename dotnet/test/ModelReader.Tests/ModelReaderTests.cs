@@ -1,69 +1,113 @@
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using System.Collections.Generic;
-//using System.Collections.ObjectModel;
-//using System.ComponentModel.DataAnnotations;
-//using System.Data.ModelDescription;
-//using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Data.ModelDescription;
+using System.Linq;
 
-//namespace System.Data.Fuse.Tests {
-//  [TestClass]
-//  public class ModelReaderTests {
+namespace System.Data.Fuse.Tests {
 
-//    [HasDependent(nameof(Person.Addresses), nameof(Address.Personalnummer), nameof(Address.Person))]
-//    [HasDependent("", nameof(WorkingAddress.PersonId), "", null, nameof(WorkingAddress))]
-//    public class Person {
+  [TestClass]
+  public class ModelReaderTests {
 
-//      public int Nummer { get; set; }
+    [TestMethod]
+    public void ModelReader_GetSchema_() {
 
-//      public string Name { get; set; } = string.Empty;
+      SchemaRoot schemaRoot = ModelReader.GetSchemaForDbContext<MockContext>();
 
-//      public int ParentId { get; set; }
+    }
 
-//      public Nullable<DateTime> SomeNullableDate { get; set; }
+    public class MockContext : DbContext {
 
-//      public virtual ICollection<Address> Addresses { get; set; } = new ObservableCollection<Address>();
+      public DbSet<AddressBook> Addresses { get; set; }
+      public DbSet<WorkingAddress> WorkingAddresses { get; set; }
 
-//      public virtual AdditionalPersonData AdditionalPersonData { get; set; } = null!;
+    }
 
-//      [Dependent]
-//      public virtual ICollection<Person> Children { get; set; } = new ObservableCollection<Person>();
+    //[TestMethod]
+    //public void ModelReader_GetSchema_ReturnsRelationsCorrectly() {
 
-//      [Principal]
-//      public virtual Person Parent { get; set; } = null!;
-//    }
+    //  SchemaRoot schemaRoot = ModelReader.GetSchema(
+    //    typeof(Person).Assembly,
+    //    new string[] {
+    //      nameof(Person),
+    //      nameof(Address),
+    //      nameof(AdditionalPersonData),
+    //      nameof(ContactData),
+    //      nameof(WorkingAddress)
+    //    }
+    //  );
+    //  Assert.IsNotNull(schemaRoot);
+    //  Assert.AreEqual(5, schemaRoot.Relations.Count());
+    //  RelationSchema childrenRelation = schemaRoot.Relations.First(r => r.PrimaryNavigationName == nameof(Person.Children));
+    //  EntitySchema personSchema = schemaRoot.Entities.First(e => e.Name == nameof(Person));
+    //  Assert.IsNotNull(personSchema);
+    //  Assert.IsNull(personSchema.Fields.FirstOrDefault((f) => f.Name == nameof(Person.Addresses)));
+    //  Assert.IsNotNull(childrenRelation);
+    //}
 
-//    [HasPrincipal("", nameof(ContactData.Personnumber), "", null, nameof(Person))]
-//    public class ContactData {
-//      public int Personnumber { get; set; }
-//      public string Content { get; set; } = string.Empty;
-//    }
+    /////////////////////////// MOCKS ///////////////////////////
 
-//    public class WorkingAddress {
-//      public int PersonId { get; set; }
-//      public string Content { get; set; } = string.Empty;
-//    }
+    [HasDependent(nameof(Person.Addresses), nameof(Address.Personalnummer), nameof(Address.Person))]
+    [HasDependent("", nameof(WorkingAddress.PersonId), "", null, nameof(WorkingAddress))]
+    public class Person {
 
-//    [HasPrincipal(nameof(Address.Person), nameof(Address.Personalnummer), nameof(System.Data.Fuse.Tests.ModelReaderTests.Person.Addresses))]
-//    public class Address {
-//      public string Street { get; set; } = string.Empty;
+      public int Nummer { get; set; }
 
-//      public int Personalnummer;
+      public string Name { get; set; } = string.Empty;
 
-//      public virtual Person Person { get; set; } = null!;
-//    }
+      public int ParentId { get; set; }
 
-//    [HasPrincipal(nameof(AdditionalPersonData.Person), nameof(AdditionalPersonData.Personalnummer), nameof(System.Data.Fuse.Tests.ModelReaderTests.Person.AdditionalPersonData))]
-//    public class AdditionalPersonData {
-//      public string Name { get; set; } = string.Empty;
+      public virtual ICollection<Address> Addresses { get; set; } = new ObservableCollection<Address>();
 
-//      public int Personalnummer;
+      public virtual AdditionalPersonData AdditionalPersonData { get; set; } = null!;
 
-//      public virtual Person Person { get; set; } = null!;
+      [Dependent]
+      public virtual ICollection<Person> Children { get; set; } = new ObservableCollection<Person>();
 
-//    }
+      [Principal]
+      public virtual Person Parent { get; set; } = null!;
+    }
 
-//    [TestMethod]
-//    public void ModelReader_GetSchema_ReturnsRelationsCorrectly() {
+    [HasPrincipal("", nameof(ContactData.Personnumber), "", null, nameof(Person))]
+    public class ContactData {
+      public int Personnumber { get; set; }
+      public string Content { get; set; } = string.Empty;
+    }
+
+    //[HasDependent(nameof(Addresses))]
+    public class AddressBook {
+
+      [Dependent]
+      public ObservableCollection<Address> Addresses { get; set; } = new ObservableCollection<Address>();
+
+    }
+
+    public class WorkingAddress {
+      public int PersonId { get; set; }
+      public string Content { get; set; } = string.Empty;
+    }
+
+    [HasPrincipal(nameof(Address.Person), nameof(Address.Personalnummer), nameof(System.Data.Fuse.Tests.ModelReaderTests.Person.Addresses))]
+    public class Address {
+      public string Street { get; set; } = string.Empty;
+
+      public int Personalnummer;
+      
+      [Principal]
+      public virtual Person Person { get; set; } = null!;
+    }
+
+    [HasPrincipal(nameof(AdditionalPersonData.Person), nameof(AdditionalPersonData.Personalnummer), nameof(System.Data.Fuse.Tests.ModelReaderTests.Person.AdditionalPersonData))]
+    public class AdditionalPersonData {
+      public string Name { get; set; } = string.Empty;
+
+      public int Personalnummer;
+
+      public virtual Person Person { get; set; } = null!;
+
+    }
 
 //      SchemaRoot schemaRoot = ModelReader.GetSchema(
 //        typeof(Person).Assembly,
