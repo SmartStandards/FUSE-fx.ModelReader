@@ -392,6 +392,8 @@ namespace System.Data.Fuse {
         fieldSchema.SetabilityFlags = (int)((SetableAttribute)setableAttribute).Setability;
       }
 
+      fieldSchema.IdentityLabel = propertyInfo.GetCustomAttribute<IdentityLabelAttribute>() != null;
+
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
 
     }
