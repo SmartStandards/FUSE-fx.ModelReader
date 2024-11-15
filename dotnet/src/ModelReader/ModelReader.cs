@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.ModelDescription;
 using System.Linq;
@@ -393,6 +394,11 @@ namespace System.Data.Fuse {
       }
 
       fieldSchema.IdentityLabel = propertyInfo.GetCustomAttribute<IdentityLabelAttribute>() != null;
+
+      Attribute defaultValueAttribute = propertyInfo.GetCustomAttribute<DefaultValueAttribute>();
+      if (defaultValueAttribute != null) {
+        fieldSchema.DefaultValue = ((DefaultValueAttribute)defaultValueAttribute).Value.ToString();
+      }
 
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
 
