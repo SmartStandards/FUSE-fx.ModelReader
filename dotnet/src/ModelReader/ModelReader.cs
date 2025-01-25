@@ -399,6 +399,10 @@ namespace System.Data.Fuse {
       if (defaultValueAttribute != null) {
         fieldSchema.DefaultValue = ((DefaultValueAttribute)defaultValueAttribute).Value.ToString();
       }
+      FilterableAttribute filterableAttribute = propertyInfo.GetCustomAttribute<FilterableAttribute>() ;
+      if (filterableAttribute != null) {
+        fieldSchema.Filterable = (int)filterableAttribute.Filterability;
+      }
 
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
 
