@@ -54,13 +54,19 @@ namespace System.Data.Fuse {
 
     private static void AddModelType(SchemaRoot schemaRoot, Type type, bool recurseNavigationProps) {
 
-      if(schemaRoot.Entities.Where((e) => e.Name == type.Name).Any()) {
+      if (schemaRoot.Entities.Where((e) => e.Name == type.Name).Any()) {
         return; //loop protection
       }
 
       EntitySchema entitySchema = new EntitySchema();
       entitySchema.Name = type.Name;
-      entitySchema.NamePlural = type.Name + " Plural";
+      PluralNameAttribute pluralNameAttribute = type.GetCustomAttribute<PluralNameAttribute>();
+      if (pluralNameAttribute != null) {
+        entitySchema.NamePlural = pluralNameAttribute.PluralName;
+      } else {
+        entitySchema.NamePlural = type.Name + "s";
+      }
+
       List<string> processedPropertyNames = new List<string>();
       schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
 
@@ -81,12 +87,12 @@ namespace System.Data.Fuse {
       Dictionary<PropertyInfo, Type> navigations = ModelRelationExtensions.GetNavigations(type, true, true, true, true);
       foreach (PropertyInfo propertyInfo in type.GetProperties()) {
 
-        if (propertyInfo.Name == "RowVersion") { 
+        if (propertyInfo.Name == "RowVersion") {
           continue;
         }
 
         if (processedPropertyNames.Contains(propertyInfo.Name)) {
-          continue; 
+          continue;
         }
 
         if (
@@ -399,7 +405,7 @@ namespace System.Data.Fuse {
       if (defaultValueAttribute != null) {
         fieldSchema.DefaultValue = ((DefaultValueAttribute)defaultValueAttribute).Value.ToString();
       }
-      FilterableAttribute filterableAttribute = propertyInfo.GetCustomAttribute<FilterableAttribute>() ;
+      FilterableAttribute filterableAttribute = propertyInfo.GetCustomAttribute<FilterableAttribute>();
       if (filterableAttribute != null) {
         fieldSchema.Filterable = (int)filterableAttribute.Filterability;
       }

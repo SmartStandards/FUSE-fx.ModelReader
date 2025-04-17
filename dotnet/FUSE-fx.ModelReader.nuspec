@@ -16,11 +16,11 @@
     <projectUrl>https://github.com/SmartStandards/FUSE-fx.ModelReader</projectUrl>
     <dependencies>
       <group targetFramework=".NETFramework4.6">
-        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.0,5.0)" />
+        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.1,5.0)" />
         <dependency id="FUSE-fx.ModelDescription" version="[2.0.16,3.0)" />
       </group>
       <group targetFramework=".NETFramework4.8">
-        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.0,5.0)" />
+        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.1,5.0)" />
         <dependency id="FUSE-fx.ModelDescription" version="[2.0.16,3.0)" />
       </group>
       <group targetFramework="net5.0">
@@ -28,11 +28,11 @@
         <dependency id="FUSE-fx.ModelDescription" version="[2.0.6,3.0)" />
       </group>
       <group targetFramework="net6.0">
-        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.0,5.0)" />
+        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.1,5.0)" />
         <dependency id="FUSE-fx.ModelDescription" version="[2.0.16,3.0)" />
       </group>
       <group targetFramework="net8.0">
-        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.0,5.0)" />
+        <dependency id="FUSE-fx.EntityAnnotations" version="[4.1.1,5.0)" />
         <dependency id="FUSE-fx.ModelDescription" version="[2.0.16,3.0)" />
       </group>
     </dependencies>
