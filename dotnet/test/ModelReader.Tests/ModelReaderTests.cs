@@ -15,13 +15,15 @@ namespace System.Data.Fuse.Tests {
     public void ModelReader_GetSchema_() {
 
       SchemaRoot schemaRoot = ModelReader.GetSchemaForDbContext<MockContext>();
-
+      Assert.IsNotNull(schemaRoot);
     }
 
     public class MockContext : DbContext {
 
       public DbSet<AddressBook> Addresses { get; set; }
       public DbSet<WorkingAddress> WorkingAddresses { get; set; }
+      public DbSet<Person> People { get; set; }
+      public DbSet<ContactData> ContactData { get; set; }
 
     }
 
@@ -70,10 +72,17 @@ namespace System.Data.Fuse.Tests {
       public virtual Person Parent { get; set; } = null!;
     }
 
+    public enum ContactType {
+      Email,
+      Phone,
+      Fax
+    }
+
     [HasPrincipal("", nameof(ContactData.Personnumber), "", null, nameof(Person))]
     public class ContactData {
       public int Personnumber { get; set; }
       public string Content { get; set; } = string.Empty;
+      public ContactType contactType { get; set; } = ContactType.Email;
     }
 
     //[HasDependent(nameof(Addresses))]
@@ -128,4 +137,6 @@ namespace System.Data.Fuse.Tests {
     //      Assert.IsNotNull(childrenRelation);
     //    }
   }
+
+  
 }

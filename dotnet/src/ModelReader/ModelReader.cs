@@ -389,8 +389,12 @@ namespace System.Data.Fuse {
       Type propertyType = propertyInfo.PropertyType;
       if (Nullable.GetUnderlyingType(propertyType) != null) {
         propertyType = propertyType.GetGenericArguments()[0];
+      } 
+      if (propertyType.IsEnum) {
+        // if type is a enum, use the underlying type
+        propertyType = Enum.GetUnderlyingType(propertyType);
       }
-      fieldSchema.Type = propertyType.Name;
+        fieldSchema.Type = propertyType.Name;
       bool required = propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
       fieldSchema.Required = required;
 
