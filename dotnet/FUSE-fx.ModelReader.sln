@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EFB5135D-039A-4D92-8FDD-9EA5D070F991}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelReader.net5.0", "src\ModelReader.net5.0\ModelReader.net5.0.csproj", "{88F15535-FAD8-4372-80DC-FD0D8C81AB4C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelReader.net6.0", "src\ModelReader.net6.0\ModelReader.net6.0.csproj", "{7B5BAEA8-7E79-4A30-B6C1-4DA4831AF970}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelReader.net461", "src\ModelReader.net461\ModelReader.net461.csproj", "{B0BA06FE-6437-4B9E-8C76-3ADFC8D191D2}"
@@ -36,10 +34,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{88F15535-FAD8-4372-80DC-FD0D8C81AB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88F15535-FAD8-4372-80DC-FD0D8C81AB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88F15535-FAD8-4372-80DC-FD0D8C81AB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88F15535-FAD8-4372-80DC-FD0D8C81AB4C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B5BAEA8-7E79-4A30-B6C1-4DA4831AF970}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B5BAEA8-7E79-4A30-B6C1-4DA4831AF970}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B5BAEA8-7E79-4A30-B6C1-4DA4831AF970}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,7 +57,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{88F15535-FAD8-4372-80DC-FD0D8C81AB4C} = {653B0907-7D36-4E4A-98CE-C23CC80678B7}
 		{7B5BAEA8-7E79-4A30-B6C1-4DA4831AF970} = {653B0907-7D36-4E4A-98CE-C23CC80678B7}
 		{B0BA06FE-6437-4B9E-8C76-3ADFC8D191D2} = {653B0907-7D36-4E4A-98CE-C23CC80678B7}
 		{28317DAC-C69F-462C-8F8A-E931D46E3B29} = {EFB5135D-039A-4D92-8FDD-9EA5D070F991}
@@ -80,7 +73,6 @@ Global
 		src\ModelReader\ModelReader.projitems*{2c2d3f16-e375-4ef2-8e98-fc66d8f39034}*SharedItemsImports = 5
 		src\ModelReader\ModelReader.projitems*{2ec41b51-2100-4d3f-a5a8-2531888a7cbc}*SharedItemsImports = 4
 		src\ModelReader\ModelReader.projitems*{7b5baea8-7e79-4a30-b6c1-4da4831af970}*SharedItemsImports = 5
-		src\ModelReader\ModelReader.projitems*{88f15535-fad8-4372-80dc-fd0d8c81ab4c}*SharedItemsImports = 5
 		src\ModelReader\ModelReader.projitems*{b0ba06fe-6437-4b9e-8c76-3adfc8d191d2}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal
