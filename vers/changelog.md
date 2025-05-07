@@ -8,7 +8,13 @@ This files contains a version history including all changes relevant for semanti
 
 ## Upcoming Changes
 
-* Removed .NET5 Target and major-version-constraint
+*(none)*
+
+
+
+## v 0.2.8
+released **2025-05-07**, including:
+ - Removed .NET5 Target and major-version-constraint
 
 
 
