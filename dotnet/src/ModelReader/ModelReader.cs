@@ -112,7 +112,7 @@ namespace System.Data.Fuse {
           continue;
         }
 
-        AddField(propertyInfo, entitySchema);
+        AddField(propertyInfo, entitySchema, schemaRoot);
       }
 
     }
@@ -383,18 +383,49 @@ namespace System.Data.Fuse {
       }
     }
 
-    private static void AddField(PropertyInfo propertyInfo, EntitySchema entitySchema) {
+    private static void AddField(
+      PropertyInfo propertyInfo,
+      EntitySchema entitySchema,
+      SchemaRoot schemaRoot
+    ) {
       FieldSchema fieldSchema = new FieldSchema();
       fieldSchema.Name = propertyInfo.Name;
       Type propertyType = propertyInfo.PropertyType;
       if (Nullable.GetUnderlyingType(propertyType) != null) {
         propertyType = propertyType.GetGenericArguments()[0];
-      } 
-      if (propertyType.IsEnum) {
-        // if type is a enum, use the underlying type
-        propertyType = Enum.GetUnderlyingType(propertyType);
       }
-        fieldSchema.Type = propertyType.Name;
+      if (propertyType.IsEnum) {
+        // if type is a enum, use the underlying type        
+        propertyType = Enum.GetUnderlyingType(propertyType);
+        string enumFullName = propertyInfo.PropertyType.FullName;
+        KnownValueRange knownValueRange = schemaRoot.KnownValues.FirstOrDefault((r) => r.Name == enumFullName);
+        if (knownValueRange == null) {
+          knownValueRange = new KnownValueRange() {
+            Name = enumFullName,
+            KnownValues = { }
+          };
+          Array allowedValues = Enum.GetValues(propertyInfo.PropertyType);
+          List<KnownValue> knownValues = new List<KnownValue>(allowedValues.Length);
+          foreach (object value in allowedValues) {
+            knownValues.Add(
+              new KnownValue() {
+#if NETCOREAPP
+                ValueSerialized = System.Text.Json.JsonSerializer.Serialize(value),
+#else
+                ValueSerialized = value.ToString(),
+#endif
+                Label = Enum.GetName(propertyInfo.PropertyType, value)
+              }
+            );
+          }
+          knownValueRange.KnownValues = knownValues.ToArray();
+          schemaRoot.KnownValues = schemaRoot.KnownValues.Union(
+            new List<KnownValueRange> { knownValueRange }
+          ).ToArray();
+        }
+        fieldSchema.KnownValueRangeName = enumFullName;
+      }
+      fieldSchema.Type = propertyType.Name;
       bool required = propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
       fieldSchema.Required = required;
 

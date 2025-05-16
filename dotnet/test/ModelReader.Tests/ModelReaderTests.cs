@@ -96,6 +96,7 @@ namespace System.Data.Fuse.Tests {
     public class WorkingAddress {
       public int PersonId { get; set; }
       public string Content { get; set; } = string.Empty;
+      public ContactType ContactType { get; set; } = ContactType.Email;
     }
 
     [HasPrincipal(nameof(Address.Person), nameof(Address.Personalnummer), nameof(System.Data.Fuse.Tests.ModelReaderTests.Person.Addresses))]
