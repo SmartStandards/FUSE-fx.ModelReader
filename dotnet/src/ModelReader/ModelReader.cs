@@ -398,7 +398,7 @@ namespace System.Data.Fuse {
         // if type is a enum, use the underlying type        
         propertyType = Enum.GetUnderlyingType(propertyType);
         string enumFullName = propertyInfo.PropertyType.FullName;
-        KnownValueRange knownValueRange = schemaRoot.KnownValues.FirstOrDefault((r) => r.Name == enumFullName);
+        KnownValueRange knownValueRange = schemaRoot.KnownValueRanges.FirstOrDefault((r) => r.Name == enumFullName);
         if (knownValueRange == null) {
           knownValueRange = new KnownValueRange() {
             Name = enumFullName,
@@ -419,7 +419,7 @@ namespace System.Data.Fuse {
             );
           }
           knownValueRange.KnownValues = knownValues.ToArray();
-          schemaRoot.KnownValues = schemaRoot.KnownValues.Union(
+          schemaRoot.KnownValueRanges = schemaRoot.KnownValueRanges.Union(
             new List<KnownValueRange> { knownValueRange }
           ).ToArray();
         }
