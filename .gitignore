@@ -248,6 +248,4 @@ ModelManifest.xml
 Lib_JS/entityschema-*.tgz
 Lib_JS/lib/*
 /dotnet/dist
-/dotnet/src/dist/bin-net46
-/dotnet/vendor/nuget/EntitySchema.1.1.0.748
-/dotnet/vendor/nuget
+/**/vendor/nuget
