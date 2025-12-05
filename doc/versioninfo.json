@@ -1,13 +1,13 @@
 {
-  "currentVersion": "0.2.15",
-  "currentVersionWithSuffix": "0.2.15",
+  "currentVersion": "0.2.16",
+  "currentVersionWithSuffix": "0.2.16",
   "releaseType": "",
-  "previousVersion": "0.2.14",
+  "previousVersion": "0.2.15",
   "changeGrade": "fix",
   "currentMajor": 0,
   "currentMinor": 2,
-  "currentPatch": 15,
-  "versionDateInfo": "2025-06-03",
-  "versionTimeInfo": "09:59:33",
-  "versionNotes": "- Removed .NET 46 and enabled .NET 8 Target\n"
+  "currentPatch": 16,
+  "versionDateInfo": "2025-12-05",
+  "versionTimeInfo": "22:34:58",
+  "versionNotes": "- new revision without significant changes\n"
 }
