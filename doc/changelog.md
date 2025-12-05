@@ -12,6 +12,12 @@ This files contains a version history including all changes relevant for semanti
 
 
 
+## v 0.2.16
+released **2025-12-05**, including:
+ - new revision without significant changes
+
+
+
 ## v 0.2.15
 released **2025-06-03**, including:
  - Removed .NET 46 and enabled .NET 8 Target
