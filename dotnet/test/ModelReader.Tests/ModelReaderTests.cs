@@ -53,7 +53,11 @@ namespace System.Data.Fuse.Tests {
 
     [HasDependent(nameof(Person.Addresses), nameof(Address.Personalnummer), nameof(Address.Person))]
     [HasDependent("", nameof(WorkingAddress.PersonId), "", null, nameof(WorkingAddress))]
+    [PrimaryIdentity(nameof(Person.Id))]
+    [UniquePropertyGroup(nameof(Person.Id),nameof(Person.Id))]
     public class Person {
+
+      public int Id { get; set; }
 
       public int Nummer { get; set; }
 

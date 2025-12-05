@@ -68,9 +68,7 @@ namespace System.Data.Fuse {
       }
 
       List<string> processedPropertyNames = new List<string>();
-      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
-
-      AddIndices(entitySchema, type);
+      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();     
 
       foreach (HasPrincipalAttribute principalAttribute in type.GetCustomAttributes<HasPrincipalAttribute>()) {
         AddPrincipalRelation(schemaRoot, type, principalAttribute);
@@ -115,6 +113,7 @@ namespace System.Data.Fuse {
         AddField(propertyInfo, entitySchema, schemaRoot);
       }
 
+      AddIndices(entitySchema, type);
     }
 
     private static Type ResolveNavigationProperty(SchemaRoot schemaRoot, PropertyInfo propertyInfo) {
@@ -380,6 +379,19 @@ namespace System.Data.Fuse {
       entitySchema.Indices = indexes.ToArray();
       if (primaryIdentity != null) {
         entitySchema.PrimaryKeyIndexName = primaryIdentity.PropertyGroupName;
+        IndexSchema primaryKeySchema = indexes.FirstOrDefault(
+          (i) => i.Name == primaryIdentity.PropertyGroupName
+        );
+        FieldSchema[] primaryKeyFields = entitySchema.Fields.Where(
+          (f) => primaryKeySchema != null && primaryKeySchema.MemberFieldNames.Contains(f.Name)
+        ).ToArray();
+        //TODO_Krn: how to determine DbGeneratedIdentity?
+        if (primaryKeyFields.Length == 1) {
+          bool isIntegerType = primaryKeyFields[0].Type.Equals("Int32", StringComparison.OrdinalIgnoreCase) ||
+            primaryKeyFields[0].Type.Equals("Integer", StringComparison.OrdinalIgnoreCase) ||
+            primaryKeyFields[0].Type.Equals("UInt32", StringComparison.OrdinalIgnoreCase) ;
+          primaryKeyFields[0].DbGeneratedIdentity = isIntegerType;
+        }
       }
     }
 
