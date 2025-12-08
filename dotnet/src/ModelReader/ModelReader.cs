@@ -457,6 +457,7 @@ namespace System.Data.Fuse {
         fieldSchema.Filterable = (int)filterableAttribute.Filterability;
       }
 
+      fieldSchema.MaxLength = 4000; //TODO_Krn: how to determine actual max length?
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
 
     }
