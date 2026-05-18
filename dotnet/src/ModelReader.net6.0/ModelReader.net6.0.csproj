@@ -13,10 +13,10 @@
     <Product>FUSE-fx.ModelReader</Product>
     <Company>(public domain)</Company>
     <Copyright>SmartStandards</Copyright>
-    <Version>0.2.18</Version>
-    <AssemblyVersion>0.2.18</AssemblyVersion>
+    <Version>0.2.19</Version>
+    <AssemblyVersion>0.2.19</AssemblyVersion>
     <Authors>SmartStandards</Authors>
-    <FileVersion>0.2.18</FileVersion>
+    <FileVersion>0.2.19</FileVersion>
     <PackageTags>ModelReader Salted Timestamp UUID BigInt Long</PackageTags>
   </PropertyGroup>
   
