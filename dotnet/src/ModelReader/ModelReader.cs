@@ -68,7 +68,7 @@ namespace System.Data.Fuse {
       }
 
       List<string> processedPropertyNames = new List<string>();
-      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();     
+      schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
 
       foreach (HasPrincipalAttribute principalAttribute in type.GetCustomAttributes<HasPrincipalAttribute>()) {
         AddPrincipalRelation(schemaRoot, type, principalAttribute);
@@ -384,14 +384,7 @@ namespace System.Data.Fuse {
         );
         FieldSchema[] primaryKeyFields = entitySchema.Fields.Where(
           (f) => primaryKeySchema != null && primaryKeySchema.MemberFieldNames.Contains(f.Name)
-        ).ToArray();
-        //TODO_Krn: how to determine DbGeneratedIdentity?
-        if (primaryKeyFields.Length == 1) {
-          bool isIntegerType = primaryKeyFields[0].Type.Equals("Int32", StringComparison.OrdinalIgnoreCase) ||
-            primaryKeyFields[0].Type.Equals("Integer", StringComparison.OrdinalIgnoreCase) ||
-            primaryKeyFields[0].Type.Equals("UInt32", StringComparison.OrdinalIgnoreCase) ;
-          primaryKeyFields[0].DbGeneratedIdentity = isIntegerType;
-        }
+        ).ToArray();        
       }
     }
 
@@ -458,6 +451,12 @@ namespace System.Data.Fuse {
       }
 
       fieldSchema.MaxLength = 4000; //TODO_Krn: how to determine actual max length?
+
+      IdentityAttribute identityAttribute = propertyInfo.GetCustomAttribute<IdentityAttribute>();
+      if (identityAttribute != null) {
+        fieldSchema.DbGeneratedIdentity = true;
+      }
+
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
 
     }
