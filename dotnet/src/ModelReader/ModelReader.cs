@@ -70,8 +70,6 @@ namespace System.Data.Fuse {
       List<string> processedPropertyNames = new List<string>();
       schemaRoot.Entities = schemaRoot.Entities.Union(new List<EntitySchema> { entitySchema }).ToArray();
 
-      AddIndices(entitySchema, type);
-
       foreach (HasPrincipalAttribute principalAttribute in type.GetCustomAttributes<HasPrincipalAttribute>()) {
         AddPrincipalRelation(schemaRoot, type, principalAttribute);
       }
@@ -115,6 +113,7 @@ namespace System.Data.Fuse {
         AddField(propertyInfo, entitySchema, schemaRoot);
       }
 
+      AddIndices(entitySchema, type);
     }
 
     private static Type ResolveNavigationProperty(SchemaRoot schemaRoot, PropertyInfo propertyInfo) {
@@ -380,6 +379,12 @@ namespace System.Data.Fuse {
       entitySchema.Indices = indexes.ToArray();
       if (primaryIdentity != null) {
         entitySchema.PrimaryKeyIndexName = primaryIdentity.PropertyGroupName;
+        IndexSchema primaryKeySchema = indexes.FirstOrDefault(
+          (i) => i.Name == primaryIdentity.PropertyGroupName
+        );
+        FieldSchema[] primaryKeyFields = entitySchema.Fields.Where(
+          (f) => primaryKeySchema != null && primaryKeySchema.MemberFieldNames.Contains(f.Name)
+        ).ToArray();        
       }
     }
 
@@ -443,6 +448,13 @@ namespace System.Data.Fuse {
       FilterableAttribute filterableAttribute = propertyInfo.GetCustomAttribute<FilterableAttribute>();
       if (filterableAttribute != null) {
         fieldSchema.Filterable = (int)filterableAttribute.Filterability;
+      }
+
+      fieldSchema.MaxLength = 4000; //TODO_Krn: how to determine actual max length?
+
+      IdentityAttribute identityAttribute = propertyInfo.GetCustomAttribute<IdentityAttribute>();
+      if (identityAttribute != null) {
+        fieldSchema.DbGeneratedIdentity = true;
       }
 
       entitySchema.Fields = entitySchema.Fields.Union(new List<FieldSchema> { fieldSchema }).ToArray();
