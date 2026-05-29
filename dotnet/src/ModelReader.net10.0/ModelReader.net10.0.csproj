@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -17,7 +17,7 @@
     <AssemblyVersion>0.2.20</AssemblyVersion>
     <Authors>SmartStandards</Authors>
     <FileVersion>0.2.20</FileVersion>
-    <PackageTags>ModelReader Salted Timestamp UUID BigInt Long</PackageTags>
+    <PackageTags>ModelReader</PackageTags>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

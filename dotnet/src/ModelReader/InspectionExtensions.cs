@@ -37,7 +37,7 @@ namespace System.Data.Fuse {
 
     /// <summary>
     /// returns the correct Type also for byRef-/out-params where
-    /// the type is usually encapsulated (leading to 'TypeName&' as string representation).
+    /// the type is usually encapsulated (leading to 'TypeName' as string representation).
     /// </summary>
     public static Type ParameterTypeSafe(this ParameterInfo extendee) {
       if (extendee.ParameterType.IsByRef) {
@@ -57,8 +57,8 @@ namespace System.Data.Fuse {
         extendee = extendee.GetElementType();
       }
       else if (extendee.IsGenericType) {
-        var genBase = extendee.GetGenericTypeDefinition();
-        var genArg1 = extendee.GetGenericArguments()[0];
+        Type genBase = extendee.GetGenericTypeDefinition();
+        Type genArg1 = extendee.GetGenericArguments()[0];
         if (typeof(List<>).MakeGenericType(genArg1).IsAssignableFrom(extendee)) {
           extendee = genArg1;
         }
