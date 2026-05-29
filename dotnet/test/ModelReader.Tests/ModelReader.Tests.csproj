@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -9,24 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FUSE-fx.EntityAnnotations" Version="4.3.0" />
+    <PackageReference Include="FUSE-fx.ModelDescription" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-    <PackageReference Include="coverlet.collector" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ModelReader.net6.0\ModelReader.net6.0.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="FUSE-fx.EntityAnnotations">
-      <HintPath>..\..\..\..\FUSE-fx.EntityAnnotations\dotnet\dist\bin-net6.0\FUSE-fx.EntityAnnotations.dll</HintPath>
-    </Reference>
-    <Reference Include="FUSE-fx.ModelDescription">
-      <HintPath>..\..\..\..\FUSE-fx.ModelDescription\dotnet\dist\bin-net6.0\FUSE-fx.ModelDescription.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\src\ModelReader.net10.0\ModelReader.net10.0.csproj" />
   </ItemGroup>
 
 </Project>
